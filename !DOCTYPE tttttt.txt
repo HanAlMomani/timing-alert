@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+  <meta charset="UTF-8">
+  <title>⏱ منبّه التوقيت</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #f0f0f0;
+      color: #222;
+      text-align: center;
+      padding-top: 100px;
+      direction: rtl;
+    }
+    h1 {
+      font-size: 2rem;
+    }
+    #alert {
+      font-size: 2rem;
+      color: green;
+      margin-top: 40px;
+      transition: all 0.3s ease;
+    }
+    #startBtn {
+      margin-top: 30px;
+      padding: 10px 20px;
+      font-size: 1rem;
+      background-color: #444;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+    #startBtn:hover {
+      background-color: #222;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>🚀 بدأ العد... اضغط في الأوقات التي يظهر فيها ⏱</h1>
+  <button id="startBtn">ابدأ العد</button>
+  <div id="alert"></div>
+
+  <audio id="beep" src="https://actions.google.com/sounds/v1/alarms/beep_short.ogg"></audio>
+
+  <script>
+    const cycleDuration = 8.192;
+    const targetOffset = 0.878;
+    const margin = 0.05;
+
+    const alertDiv = document.getElementById('alert');
+    const startBtn = document.getElementById('startBtn');
+    const beep = document.getElementById('beep');
+    let startTime;
+
+    function checkTiming() {
+      const now = performance.now();
+      const elapsed = (now - startTime) / 1000;
+      const inCycle = elapsed % cycleDuration;
+
+      if (Math.abs(inCycle - targetOffset) < margin) {
+        alertDiv.innerText = `🎯 اضغط الآن! الوقت المنقضي: ${elapsed.toFixed(3)} ثانية`;
+        beep.play();
+      } else {
+        alertDiv.innerText = '';
+      }
+
+      requestAnimationFrame(checkTiming);
+    }
+
+    startBtn.onclick = () => {
+      startTime = performance.now();
+      startBtn.style.display = 'none';
+      requestAnimationFrame(checkTiming);
+    };
+  </script>
+
+</body>
+</html>
